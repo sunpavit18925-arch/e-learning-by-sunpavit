@@ -1,0 +1,117 @@
+
+        .section-header h2 {
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-family: sans-serif;
+        }
+
+        /* การตั้งค่าพื้นฐานสำหรับ Grid */
+        .course-grid {
+            display: grid;
+            /* ใช้ auto-fill เพื่อให้ card กระจายตัวสวยงาม */
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            padding: 20px 0; /* บน-ล่าง 20px, ซ้าย-ขวา 0 เพราะมี .content คุม */
+        }
+
+        /* ตัวการ์ดที่ปรับปรุงใหม่ */
+        .course-card {
+            background: linear-gradient(to bottom, #ffffff, #fdfdfd);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(0,0,0,0.03);
+            
+            /* --- ส่วนสำคัญที่ทำให้ปุ่มอยู่ล่างสุด --- */
+            display: flex;
+            flex-direction: column;
+            height: 100%; 
+            box-sizing: border-box;
+        }
+
+        /* แถบสีด้านบนการ์ด */
+        .course-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #007bff, #00d4ff);
+        }
+
+        .instructor-label {
+            background: #f0f4f8;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            display: inline-block;
+            margin-bottom: 12px;
+            width: fit-content;
+            color: #555;
+        }
+
+        /* หัวข้อคอร์ส */
+        .course-card h3 {
+            margin: 0 0 8px 0;
+            font-size: 1.25rem;
+            color: #333;
+        }
+
+        /* คำอธิบาย */
+        .course-card p {
+            margin: 0 0 15px 0;
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            /* ช่วยคุมระยะห่างให้ปุ่มถูกดันลงไป */
+            flex-grow: 0; 
+        }
+
+        /* ราคา */
+        .price-box {
+            margin-top: auto; /* ดันส่วนราคาและปุ่มลงไปล่างสุดของ Card */
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            color: #27ae60;
+            font-weight: 800;
+        }
+
+        /* ปรับปรุงปุ่มให้ดูมีมิติ */
+        .btn {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            display: block;
+        }
+
+
+        .btn:hover {
+            box-shadow: 0 6px 15px rgba(0, 123, 255, 0.4);
+            transform: translateY(-2px);
+            color: white;
+        }
+
+        /* ปรับแต่งสำหรับหน้าจอมือถือ */
+        @media (max-width: 600px) {
+            .course-grid {
+                grid-template-columns: 1fr; /* แสดงแถวละ 1 การ์ดในมือถือ */
+                gap: 20px;
+            }
+        }
+
+
+
+  

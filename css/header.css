@@ -1,0 +1,124 @@
+/* --- Reset & Global Styles --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Kanit', sans-serif;
+    background-color: #ffffff; /* พื้นหลังหน้าเว็บขาวบริสุทธิ์ */
+}
+
+/* --- Navigation Base --- */
+.navbar {
+    background: #f1f5f9; /* สีขาวเข้ม/เทาอ่อนมาก ตัดกับพื้นหลังขาวได้ชัดเจน */
+    height: 70px;
+    width: 100%;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    /* เส้นขอบล่างบางๆ และเงาแบบนุ่มนวล */
+    border-bottom: 1px solid #e2e8f0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.nav-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 40px; /* เพิ่ม Padding ให้ดูโปร่งแบบมืออาชีพ */
+}
+
+/* Logo: สีม่วงสดใสตามภาพที่ 7 */
+.logo a {
+    font-size: 1.7rem;
+    font-weight: 700;
+    text-decoration: none;
+    color: #7c3aed; /* สีม่วง Violet */
+    letter-spacing: -0.5px;
+}
+
+/* เมนูสำหรับจอคอม */
+.nav-menu {
+    display: flex;
+    list-style: none;
+    align-items: center;
+    gap: 10px;
+}
+
+.nav-menu li a {
+    color: #475569; /* สีเทาเข้ม อ่านง่าย */
+    text-decoration: none;
+    font-weight: 400;
+    font-size: 0.95rem;
+    padding: 8px 16px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+/* เอฟเฟกต์ตอน Hover เมนู */
+.nav-menu li a:hover {
+    color: #7c3aed;
+    background: rgba(124, 58, 237, 0.05);
+}
+
+/* สไตล์เฉพาะโปรไฟล์ */
+.profile-link i {
+    margin-left: 6px;
+    font-size: 0.9rem;
+}
+
+/* ปุ่ม Logout: ทรงแคปซูลสีแดง ตามภาพเป๊ะๆ */
+.logout-item a {
+    background-color: #ef4444 !important;
+    color: white !important;
+    padding: 10px 24px !important;
+    border-radius: 999px !important; /* ทรงแคปซูล */
+    font-weight: 600 !important;
+    font-size: 0.9rem !important;
+    margin-left: 15px;
+    box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.2);
+}
+
+.logout-item a:hover {
+    background-color: #dc2626 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 12px -1px rgba(239, 68, 68, 0.3);
+}
+
+/* Mobile Menu */
+#check { display: none; }
+.checkbtn {
+    font-size: 24px;
+    color: #475569;
+    cursor: pointer;
+    display: none;
+}
+
+@media (max-width: 992px) {
+    .nav-container { padding: 0 20px; }
+    .checkbtn { display: block; }
+    
+    .nav-menu {
+        position: fixed;
+        width: 280px;
+        height: 100vh;
+        background: #f1f5f9;
+        top: 0;
+        left: -300px;
+        z-index: 999;
+        flex-direction: column;
+        padding-top: 80px;
+        transition: all 0.4s ease;
+        box-shadow: 10px 0 20px rgba(0,0,0,0.05);
+    }
+    
+    #check:checked ~ .nav-menu { left: 0; }
+    
+    .nav-menu li { width: 100%; padding: 0 20px; }
+    .nav-menu li a { display: block; padding: 15px; border-bottom: 1px solid #e2e8f0; }
+}

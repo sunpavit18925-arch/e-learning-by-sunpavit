@@ -1,0 +1,3 @@
+'use client';
+import {useEffect,useState} from 'react';
+export default function Certificate({id}:{id:string}){const [url,setUrl]=useState(''),[error,setError]=useState('');useEffect(()=>{let objectUrl='';const token=localStorage.getItem('token');fetch(`/api/courses/${id}/certificate`,{headers:{Authorization:`Bearer ${token}`}}).then(async r=>{if(!r.ok){const data=await r.json();throw Error(data.message)}objectUrl=URL.createObjectURL(await r.blob());setUrl(objectUrl)}).catch(e=>setError(e.message));return()=>{if(objectUrl)URL.revokeObjectURL(objectUrl)}},[id]);return url?<iframe src={url} title="ใบประกาศนียบัตร" style={{width:'100%',height:'100vh',border:0}}/>:<main style={{padding:40,textAlign:'center'}}>{error||'กำลังสร้างใบประกาศนียบัตร...'}</main>}

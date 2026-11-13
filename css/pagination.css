@@ -1,0 +1,59 @@
+/* Container ของเลขหน้า */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 0;
+    margin-top: 30px;
+    width: 100%;
+}
+
+.pagination ul {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    gap: 8px; /* ระยะห่างระหว่างปุ่ม */
+}
+
+/* ตกแต่งปุ่มตัวเลข */
+.pagination ul li a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    text-decoration: none;
+    color: #555;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 10px; /* ขอบมน */
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+}
+
+/* เมื่อเอาเมาส์ไปชี้ (Hover) */
+.pagination ul li a:hover {
+    background-color: #f0f7ff;
+    color: #007bff;
+    border-color: #add8e6;
+    transform: translateY(-2px); /* ยกตัวขึ้นเล็กน้อย */
+    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.1);
+}
+
+/* สไตล์สำหรับหน้าที่กำลังเปิดอยู่ (Active) */
+.pagination ul li.active a {
+    background-color: #007bff; /* สีฟ้าเด่น */
+    color: white;
+    border-color: #007bff;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+}
+
+/* ทำให้ดูดีขึ้นในมือถือ */
+@media (max-width: 480px) {
+    .pagination ul li a {
+        width: 35px;
+        height: 35px;
+        font-size: 14px;
+    }
+}

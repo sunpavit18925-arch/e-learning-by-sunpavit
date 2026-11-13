@@ -1,0 +1,45 @@
+﻿import { Router } from 'express';
+import { auth } from '../middlewares/auth';
+import * as c from '../controllers/courseController';
+import * as l from '../controllers/learningController';
+import * as u from '../controllers/userController';
+import {demoUsers,demoSession} from '../controllers/demoController';
+import { upload } from '../middlewares/upload';
+import * as contact from '../controllers/contactController';
+const router = Router();
+router.post('/contact-messages',contact.sendMessage);
+router.get('/admin/messages',auth,contact.adminOnly,contact.listMessages);
+router.get('/admin/messages/:id',auth,contact.adminOnly,contact.getMessage);
+router.patch('/admin/messages/:id',auth,contact.adminOnly,contact.updateMessage);
+router.get('/courses',c.listCourses);
+router.get('/categories',c.categories);
+router.get('/instructors',auth,c.instructors);
+router.get('/courses/:id',auth,c.getCourse);
+router.post('/courses',auth,upload.single('thumbnail_file'),c.createCourse);
+router.put('/courses/:id',auth,upload.single('thumbnail_file'),c.updateCourse);
+router.delete('/courses/:id',auth,c.deleteCourse);
+router.get('/demo/users',demoUsers);
+router.post('/demo/session',demoSession);
+router.get('/me',auth,u.me);
+router.put('/me',auth,upload.single('image'),u.updateProfile);
+router.get('/stats',auth,u.stats);
+router.get('/my-courses',auth,c.myCourses);
+router.post('/courses/:id/enroll',auth,c.enroll);
+router.get('/history',auth,c.history);
+router.get('/notifications',auth,u.notifications);
+router.post('/notifications/read',auth,u.readNotifications);
+router.get('/notifications/:id',auth,u.notificationDetail);
+router.post('/lessons/:id/progress',auth,l.progress);
+router.post('/courses/:id/lessons',auth,l.saveLesson);
+router.put('/courses/:id/lessons/:lessonId',auth,l.saveLesson);
+router.delete('/courses/:id/lessons/:lessonId',auth,l.deleteLesson);
+router.get('/courses/:id/quiz',auth,l.quiz);
+router.get('/courses/:id/quiz/edit',auth,l.editQuiz);
+router.put('/courses/:id/quiz',auth,l.saveQuiz);
+router.post('/quizzes/:id/attempts',auth,l.submitQuiz);
+router.get('/courses/:id/leaderboard',auth,l.leaderboard);
+router.get('/courses/:id/certificate',auth,l.certificate);
+export default router;
+
+
+

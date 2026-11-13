@@ -1,0 +1,159 @@
+/* ลบขอบขาวที่อาจติดมากับ Browser */
+html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow-x: hidden; 
+    width: 100% !important;
+    box-sizing: border-box;
+    font-family: 'Sarabun', sans-serif;
+}
+
+*, *::before, *::after {
+    box-sizing: inherit;
+}
+
+/* สำหรับ Tablet และ Mobile */
+@media screen and (max-width: 1024px) {
+    /* รีเซ็ตเฉพาะส่วนที่ไม่ใช่ Sidebar หลักที่เราจะทำ Hamburger */
+    /* .left-side-hidden, aside.hidden { 
+        display: none !important; 
+    } */
+    /* 1. รีเซ็ต Layout หลัก */
+    /* .sidebar-container, aside, .left { 
+        display: none !important; 
+    } */
+
+   
+
+    .main-content, .main-layout, .content-wrapper {
+        margin: 0 !important;
+        padding: 5px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        display: block !important;
+    }
+
+    /* 2. จัดการตาราง (จุดสำคัญที่ทำให้ไม่ทะลุ) */
+    .table-responsive, .table-wrapper {
+        width: 100% !important;
+        overflow-x: auto !important; /* เปิด Scroll แนวนอน */
+        display: block !important;
+        -webkit-overflow-scrolling: touch;
+        border: 1px solid #ddd !important;
+        background-color: #fff !important;
+    }
+
+    table, .inventory-table {
+        /* ล้างค่า width: 70% จากไฟล์ HTML หลัก */
+        width: max-content !important; 
+        min-width: 100% !important;
+        table-layout: auto !important;
+        border-collapse: collapse !important;
+        display: table !important; /* บังคับคืนสถานะตาราง */
+        margin: 0 !important;
+    }
+
+    /* 3. จัดการช่องตาราง (จุดสำคัญที่ทำให้ไม่ซ้อน) */
+    th, td {
+        /* บรรทัดเดียว ไม่ซ้อน */
+        white-space: nowrap !important;
+        display: table-cell !important;
+        padding: 12px 15px !important;
+        border: 1px solid #eee !important;
+        vertical-align: middle !important;
+        /* ล้างค่า max-width: 300px ที่เขียนไว้ใน <td> ของ HTML */
+        max-width: none !important; 
+        width: auto !important;
+        position: static !important;
+    }
+
+    /* 4. จัดการปุ่มและ Badge สถานะ */
+    .status-badge, .btn, .action-buttons button {
+        display: inline-block !important;
+        white-space: nowrap !important;
+        position: relative !important;
+        transform: none !important;
+        margin: 2px !important;
+    }
+
+    .action-buttons {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        justify-content: flex-start !important;
+    }
+}
+
+/* สำหรับมือถือจอเล็ก */
+@media screen and (max-width: 480px) {
+    .dashboard-title {
+        font-size: 18px !important;
+    }
+    
+    .add-data-btn {
+        width: 100% !important;
+        margin: 10px 0 !important;
+    }
+
+    table {
+        font-size: 13px !important;
+    }
+
+    th, td {
+        padding: 10px 8px !important;
+    }
+}
+
+/* ซ่อนปุ่ม Hamburger ในหน้าจอคอม */
+.hamburger-menu {
+    display: none;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 10px;
+    color: #444;
+}
+
+/* เปลี่ยนจาก 768px เป็น 1024px เพื่อให้แนวนอนมือถือซ่อนเมนูด้วย */
+@media screen and (max-width: 1024px) {
+
+    /* บังคับแสดงปุ่ม Hamburger */
+    .hamburger-menu {
+        display: block !important;
+        position: absolute;
+        left: 15px;
+        top: 20px;
+        z-index: 1100;
+    }
+
+    /* บังคับซ่อน Sidebar ไปทางซ้าย */
+    .sidebar {
+        position: fixed !important;
+        left: -280px !important; 
+        top: 0;
+        width: 280px;
+        height: 100vh !important;
+        z-index: 99999 !important;
+        transition: left 0.3s ease-in-out;
+        display: block !important;
+        box-shadow: none !important;
+    }
+
+    /* เมื่อกดเปิดเมนู */
+    .sidebar.active {
+        left: 0 !important;
+        box-shadow: 5px 0 15px rgba(0,0,0,0.3) !important;
+    }
+
+    /* จัดการ Layout เนื้อหาให้เต็มจอเมื่อเมนูซ่อน */
+    .main-content, .main-layout, .content-wrapper {
+        margin-left: 0 !important;
+        width: 100% !important;
+    }
+
+    /* 3. ส่วน Overlay ปิดไว้ตามเดิม */
+    .sidebar-overlay {
+        display: none !important;      
+        visibility: hidden !important; 
+        pointer-events: none !important; 
+        z-index: -1 !important;        
+    }
+}
