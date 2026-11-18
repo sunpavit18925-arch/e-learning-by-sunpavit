@@ -1,0 +1,21 @@
+# Count application source normally: PHP, TypeScript/TSX, JavaScript and CSS.
+# Exclude third-party code, archived copies and generated/runtime files only.
+
+# Bundled TCPDF library, including its generated PHP font definitions.
+/TCPDF-main/** linguist-vendored=true
+**/node_modules/** linguist-vendored=true
+
+# Archived application copies are not part of the maintained source statistics.
+/legacy_backup/** linguist-detectable=false
+
+# User content, image assets and local database files are not application code.
+/image/** linguist-detectable=false
+**/uploads/** linguist-detectable=false
+**/.local-db/** linguist-detectable=false
+
+# Compiled output and framework/package-manager generated files.
+**/.next/** linguist-generated=true
+**/dist/** linguist-generated=true
+**/package-lock.json linguist-generated=true
+**/next-env.d.ts linguist-generated=true
+*.tsbuildinfo linguist-generated=true
