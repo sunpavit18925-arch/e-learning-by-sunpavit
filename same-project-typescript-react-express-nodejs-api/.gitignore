@@ -1,0 +1,9 @@
+node_modules
+.next
+dist
+.env
+
+.local-db/
+database/elearning_db.sql
+*.tsbuildinfo
+backend/uploads/
