@@ -3,6 +3,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 require_once 'connection/connection.php';
+require_once __DIR__ . '/includes/pagination.php';
 
 // 1. ตรวจสอบการ Login
 if (!isset($_SESSION['user_id'])) {
@@ -14,7 +15,10 @@ $user_id = (int)$_SESSION['user_id'];
 $username = $_SESSION['username'] ?? ''; 
 
 try {
-    // 2. ดึงข้อมูลประวัติการสอบ
+    $count_stmt = $pdo->prepare('SELECT COUNT(*) FROM quiz_attempts qa JOIN quizzes q ON q.quiz_id=qa.quiz_id JOIN courses c ON c.course_id=q.course_id WHERE qa.user_id=?');
+    $count_stmt->execute([$user_id]);
+    $paging = elearning_pagination((int)$count_stmt->fetchColumn());
+    // 2. ดึงข้อมูลประวัติการสอบเฉพาะหน้าปัจจุบัน
     $stmt = $pdo->prepare("
         SELECT 
             qa.attempt_id,
@@ -32,7 +36,7 @@ try {
         JOIN quizzes q ON qa.quiz_id = q.quiz_id
         JOIN courses c ON q.course_id = c.course_id
         WHERE qa.user_id = ?
-        ORDER BY qa.attempt_date DESC
+        ORDER BY qa.attempt_date DESC, qa.attempt_id DESC LIMIT {$paging['size']} OFFSET {$paging['offset']}
     ");
     $stmt->execute([$user_id]);
     $history = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -147,6 +151,7 @@ try {
             </table>
         </div>
     </div>
+    <?php elearning_render_pagination($paging); ?>
 </main>
 
 <?php include 'footer.php'; ?>

@@ -9,7 +9,7 @@
             </p>
         </div>
         
-        <div class="mt-6 flex justify-center space-x-4 text-xs text-gray-500">
+        <div class="site-footer-links mt-6 flex justify-center space-x-4 text-xs text-gray-500">
             <a href="about.php" class="hover:text-white transition">เกี่ยวกับเรา</a>
             <span>•</span>
             <a href="contact.php" class="hover:text-white transition">ติดต่อสอบถาม</a>

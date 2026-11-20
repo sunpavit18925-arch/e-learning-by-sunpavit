@@ -9,16 +9,16 @@
     font-family: "Noto Sans Thai", "Helvetica Neue", Arial, sans-serif;
 }
 
-/* * {
+*, *::before, *::after {
     box-sizing: border-box;
-} */
+}
 
 body, html {
     margin: 0;
     padding: 0;
-    height: 100%;
+    min-height: 100%;
     width: 100%;
-    overflow: hidden; /* ป้องกัน scrollbar โผล่มาเลื่อนเล่น */
+    overflow: visible;
 }
 
 .login-page-container {
@@ -31,18 +31,23 @@ body, html {
 
 /* --- Layout หลัก --- */
 .wrap {
-    height: 100vh; /* เปลี่ยนจาก calc(100vh - 64px) เป็น 100vh */
+    min-height: 100vh;
+    min-height: 100dvh;
     display: flex;
     align-items: stretch;
-    overflow: hidden;
+    overflow: visible;
     margin: 0;
 }
 
 /* ฝั่งซ้าย: รูปภาพ */
 .left {
     flex: 1;
+    min-width: 0;
     background: #000;
-    height: 100vh; 
+    height: 100vh;
+    height: 100dvh;
+    position: sticky;
+    top: 0;
     overflow: hidden;
 }
 
@@ -61,8 +66,8 @@ body, html {
     width: 650px;
     max-width: 46%;
     min-width: 450px;
-    height: 100vh; 
-    overflow-y: auto; /* ให้เลื่อนเฉพาะฝั่งขวาได้ถ้าจอเล็ก */
+    min-height: 100vh;
+    min-height: 100dvh;
     background: var(--panel-bg);
     padding: 40px; /* ลด padding ลงเล็กน้อยถ้าฟอร์มเบียดขอบล่าง */
     display: flex;
@@ -73,6 +78,8 @@ body, html {
 .login-panel {
     width: 100%;
     max-width: var(--form-width);
+    margin-block: auto;
+    overflow-wrap: anywhere;
 }
 
 /* --- UI Elements (สวยเหมือนเดิม) --- */
@@ -130,6 +137,8 @@ label.field-label {
 
 .row-between {
     display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 25px;
@@ -159,9 +168,13 @@ label.field-label {
 
 }
 
-svg {
-    margin-top: 30px;
+.pw-wrap .input { padding-right: 48px; }
+.pw-eye svg { display: block; margin: 0; }
+.pw-wrap .pw-eye {
+    top: auto !important; bottom: 8px; right: 8px !important;
+    width: 36px; height: 36px; display: grid; place-items: center; transform: none;
 }
+.field-row > .field { min-width: 0; }
 
 .or-sep {
     text-align: center;
@@ -180,7 +193,7 @@ svg {
     .right {
         width: 100%;
         max-width: 100%;
-        min-width: 100%; /* ปลดล็อคความกว้างขั้นต่ำ */
+        min-width: 0; /* ปลดล็อคความกว้างขั้นต่ำ */
         padding: 40px 20px;
         background: #fff; /* มือถือใช้พื้นหลังขาวจะดูพรีเมียมกว่า */
     }
@@ -192,7 +205,11 @@ svg {
     /* ปรับปุ่ม register ในมือถือให้กว้างขึ้นเล็กน้อยเพื่อให้กดง่าย */
     .btn.register {
         width: 60%;
-        margin-top:30px !important;
-        margin-left:75px !important;
+        margin: 30px auto 0;
     }
+}
+@media (max-width: 480px) {
+    .right { padding: 24px 16px; }
+    .field-row { flex-direction: column; gap: 0 !important; }
+    h1.title { font-size: 24px; }
 }

@@ -81,29 +81,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $course_id = (int)$pdo->lastInsertId();
 
                 // สร้างการแจ้งเตือน (Notification) ให้ผู้ใช้ทุกคนในระบบ
-                $stmt_users = $pdo->query("SELECT user_id FROM users");
-                $all_users = $stmt_users->fetchAll(PDO::FETCH_ASSOC);
-
-                if ($all_users) {
-                    $noti_link = "courses.php?id=" . $course_id;
-                    $sql_noti = "INSERT INTO notifications (user_id, title, message, link, is_read, created_at) 
-                                 VALUES (?, ?, ?, ?, 0, NOW())";
-                    $stmt_insert_noti = $pdo->prepare($sql_noti);
-
-                    foreach ($all_users as $u) {
-                        $current_title = ($u['user_id'] == $instructor_id) ? "สร้างคอร์สสำเร็จ!" : "คอร์สเรียนใหม่แกะกล่อง!";
-                        $current_msg = ($u['user_id'] == $instructor_id) 
-                            ? "คอร์ส '$title' ของคุณพร้อมให้เข้าเรียนแล้ว" 
-                            : "เปิดตัวคอร์สใหม่: $title เริ่มเรียนได้แล้ววันนี้";
-
-                        $stmt_insert_noti->execute([
-                            $u['user_id'],
-                            $current_title,
-                            $current_msg,
-                            $noti_link
-                        ]);
-                    }
-                }
+                $stmt_insert_noti = $pdo->prepare("
+                    INSERT INTO notifications (user_id, title, message, link, is_read, created_at)
+                    SELECT user_id, CASE WHEN user_id = ? THEN ? ELSE ? END,
+                           CASE WHEN user_id = ? THEN ? ELSE ? END, ?, 0, NOW()
+                    FROM users
+                ");
+                $stmt_insert_noti->execute([
+                    $instructor_id, 'สร้างคอร์สสำเร็จ!', 'คอร์สเรียนใหม่แกะกล่อง!',
+                    $instructor_id, "คอร์ส '$title' ของคุณพร้อมให้เข้าเรียนแล้ว",
+                    "เปิดตัวคอร์สใหม่: $title เริ่มเรียนได้แล้ววันนี้", 'courses.php?id=' . $course_id
+                ]);
 
                 $pdo->commit();
 

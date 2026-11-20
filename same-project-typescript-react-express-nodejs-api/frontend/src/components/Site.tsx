@@ -1,18 +1,25 @@
 'use client';
 import {useSession} from './Application';
 import {NoticeBox} from './Shared';
-import {Home,Catalog} from './HomeAndCatalog';
-import About from './About';
-import DemoRoles from './DemoRoles';
-import Contact from './Contact';
-import AdminMessages from './AdminMessages';
-import {CoursePage,LessonsPage} from './Learning';
-import {QuizPage,QuizEditor,Leaderboard} from './Quiz';
-import {CourseEditor} from './CourseEditor';
-import {History,Notifications} from './Account';
-import EditProfile from './EditProfile';
-import Certificate from './Certificate';
-import Profile from './Profile';
+import dynamic from 'next/dynamic';
+function Loading(){return <main className="p-8 flex-1 text-slate-500">กำลังโหลด...</main>}
+const Home=dynamic(()=>import('./HomeAndCatalog').then(module=>module.Home),{loading:Loading});
+const Catalog=dynamic(()=>import('./HomeAndCatalog').then(module=>module.Catalog),{loading:Loading});
+const CoursePage=dynamic(()=>import('./Learning').then(module=>module.CoursePage),{loading:Loading});
+const LessonsPage=dynamic(()=>import('./Learning').then(module=>module.LessonsPage),{loading:Loading});
+const QuizPage=dynamic(()=>import('./Quiz').then(module=>module.QuizPage),{loading:Loading});
+const QuizEditor=dynamic(()=>import('./Quiz').then(module=>module.QuizEditor),{loading:Loading});
+const Leaderboard=dynamic(()=>import('./Quiz').then(module=>module.Leaderboard),{loading:Loading});
+const CourseEditor=dynamic(()=>import('./CourseEditor').then(module=>module.CourseEditor),{loading:Loading});
+const History=dynamic(()=>import('./Account').then(module=>module.History),{loading:Loading});
+const Notifications=dynamic(()=>import('./Account').then(module=>module.Notifications),{loading:Loading});
+const About=dynamic(()=>import('./About'),{loading:Loading});
+const DemoRoles=dynamic(()=>import('./DemoRoles'),{loading:Loading});
+const Contact=dynamic(()=>import('./Contact'),{loading:Loading});
+const AdminMessages=dynamic(()=>import('./AdminMessages'),{loading:Loading});
+const EditProfile=dynamic(()=>import('./EditProfile'),{loading:Loading});
+const Certificate=dynamic(()=>import('./Certificate'),{loading:Loading});
+const Profile=dynamic(()=>import('./Profile'),{loading:Loading});
 
 export type PageName='home'|'courses'|'course'|'new-course'|'edit-course'|'lessons'|'quiz'|'edit-quiz'|'leaderboard'|'certificate'|'about'|'contact'|'demo-roles'|'profile'|'edit-profile'|'history'|'notifications'|'notification'|'messages';
 const privatePages=new Set<PageName>(['courses','course','new-course','edit-course','lessons','quiz','edit-quiz','leaderboard','certificate','profile','edit-profile','history','notifications','notification','messages']);

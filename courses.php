@@ -42,11 +42,12 @@ try {
     // 2.1 ดึงสถานะบทเรียนที่เรียนจบแล้วของผู้ใช้
     $completed_lesson_ids = [];
     if ($user_id > 0) {
-        $stmt_prog = $pdo->prepare("SELECT lesson_id FROM user_lesson_progress WHERE user_id = ? AND is_completed = 1");
-        $stmt_prog->execute([$user_id]);
+        $stmt_prog = $pdo->prepare("SELECT DISTINCT p.lesson_id FROM user_lesson_progress p JOIN lessons l ON l.lesson_id=p.lesson_id WHERE p.user_id = ? AND l.course_id = ? AND p.is_completed = 1");
+        $stmt_prog->execute([$user_id, $course_id]);
         $completed_lesson_ids = $stmt_prog->fetchAll(PDO::FETCH_COLUMN);
     }
-    $completed_count = count(array_intersect(array_column($lessons, 'lesson_id'), $completed_lesson_ids));
+    $completed_lessons = array_fill_keys($completed_lesson_ids, true);
+    $completed_count = count($completed_lessons);
     $total_count = count($lessons);
     $progress_pct = $total_count > 0 ? (int)round(($completed_count / $total_count) * 100) : 0;
 
@@ -68,15 +69,13 @@ try {
         $stmt_attempt = $pdo->prepare("
             SELECT * FROM quiz_attempts 
             WHERE user_id = ? AND quiz_id = ? 
-            ORDER BY attempt_date DESC LIMIT 1
+            ORDER BY attempt_date DESC, attempt_id DESC LIMIT 1
         ");
         $stmt_attempt->execute([$user_id, $quiz['quiz_id']]);
         $latestAttempt = $stmt_attempt->fetch(PDO::FETCH_ASSOC);
 
         $stmt_pass = $pdo->prepare("
-            SELECT * FROM quiz_attempts 
-            WHERE user_id = ? AND quiz_id = ? AND is_passed = 1 
-            ORDER BY score_obtained DESC LIMIT 1
+            SELECT 1 FROM quiz_attempts WHERE user_id = ? AND quiz_id = ? AND is_passed = 1 LIMIT 1
         ");
         $stmt_pass->execute([$user_id, $quiz['quiz_id']]);
         $passedRecord = $stmt_pass->fetch(PDO::FETCH_ASSOC);
@@ -226,7 +225,7 @@ try {
 
                             <div class="flex items-center gap-2 self-start sm:self-auto">
                                 <?php if ($user_id > 0): ?>
-                                    <?php $isDone = in_array((int)$lesson['lesson_id'], $completed_lesson_ids); ?>
+                                    <?php $isDone = isset($completed_lessons[(int)$lesson['lesson_id']]); ?>
                                     <button id="lesson-btn-<?= $lesson['lesson_id'] ?>" 
                                             onclick="toggleLesson(<?= (int)$lesson['lesson_id'] ?>)" 
                                             class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shrink-0 <?= $isDone ? 'bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100' : 'bg-slate-100 text-slate-600 border border-slate-200 hover:bg-indigo-50 hover:text-indigo-600' ?>">
@@ -248,7 +247,7 @@ try {
 
                         <?php if ($video_id): ?>
                             <div class="relative w-full overflow-hidden rounded-2xl bg-black aspect-video max-w-3xl mx-auto shadow-inner">
-                                <iframe src="https://www.youtube.com/embed/<?= $video_id ?>?rel=0" 
+                                <iframe loading="lazy" src="https://www.youtube.com/embed/<?= $video_id ?>?rel=0"
                                         class="absolute top-0 left-0 w-full h-full border-0"
                                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                                         allowfullscreen>

@@ -6,6 +6,7 @@ ini_set('display_errors', 0);
 error_reporting(E_ALL);
 
 require_once 'connection/connection.php';
+require_once __DIR__ . '/includes/quiz-data.php';
 header('Content-Type: application/json; charset=utf-8');
 
 // ตรวจสอบการล็อกอิน
@@ -41,46 +42,12 @@ try {
     }
 
     $total_questions = count($questions);
-    $correct_count = 0;
-    $total_possible_points = 0;
-    $earned_points = 0;
-    $answers_to_save = [];
-
     $pdo->beginTransaction();
-
-    // 2. ตรวจคำตอบแต่ละข้อ
-    foreach ($questions as $q) {
-        $q_id = (int)$q['question_id'];
-        $q_points = max(1, (int)$q['points']);
-        $total_possible_points += $q_points;
-
-        $post_key = 'q_' . $q_id;
-        $selected_option_id = isset($_POST[$post_key]) ? (int)$_POST[$post_key] : null;
-        $is_correct = 0;
-
-        if ($selected_option_id !== null && $selected_option_id > 0) {
-            $stmt_check = $pdo->prepare("SELECT is_correct FROM question_options WHERE option_id = ? AND question_id = ?");
-            $stmt_check->execute([$selected_option_id, $q_id]);
-            $result = $stmt_check->fetch(PDO::FETCH_ASSOC);
-
-            if ($result && (int)$result['is_correct'] === 1) {
-                $correct_count++;
-                $earned_points += $q_points;
-                $is_correct = 1;
-            }
-        }
-
-        $answers_to_save[] = [
-            'question_id' => $q_id,
-            'option_id' => $selected_option_id,
-            'is_correct' => $is_correct
-        ];
-    }
-
-    // 3. คำนวณเปอร์เซ็นต์คะแนน
-    $score_percent = ($total_possible_points > 0) 
-        ? round(($earned_points / $total_possible_points) * 100, 2) 
-        : round(($correct_count / $total_questions) * 100, 2);
+    $options_by_question = elearning_quiz_options($pdo, $quiz_id, true);
+    $graded = elearning_grade_quiz($questions, $options_by_question, $_POST);
+    $correct_count = $graded['correct_count'];
+    $score_percent = $graded['score_percent'];
+    $answers_to_save = $graded['answers'];
 
     $stmt_qinfo = $pdo->prepare("SELECT course_id, passing_score FROM quizzes WHERE quiz_id = ?");
     $stmt_qinfo->execute([$quiz_id]);
@@ -105,19 +72,8 @@ try {
 
     $attempt_id = (int)$pdo->lastInsertId();
 
-    // 5. บันทึกคำตอบรายข้อ
-    $stmt_ans = $pdo->prepare("
-        INSERT INTO student_answers (attempt_id, question_id, option_id, is_correct) 
-        VALUES (?, ?, ?, ?)
-    ");
-    foreach ($answers_to_save as $ans) {
-        $stmt_ans->execute([
-            $attempt_id,
-            $ans['question_id'],
-            $ans['option_id'],
-            $ans['is_correct']
-        ]);
-    }
+    // 5. บันทึกคำตอบเป็นกลุ่มใน transaction เดียวกับผลสอบ
+    elearning_save_answers($pdo, $attempt_id, $answers_to_save);
 
     // 6. ถ้าสอบผ่าน และมีการลงทะเบียน ให้อัปเดต progress_percentage เป็น 100%
     if ($is_passed && $course_id > 0) {

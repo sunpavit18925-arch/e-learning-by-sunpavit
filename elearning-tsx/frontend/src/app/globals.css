@@ -1,4 +1,0 @@
-﻿@tailwind base;
-@tailwind components;
-@tailwind utilities;
-body{font-family:'Kanit',sans-serif;min-height:100vh;background:#f9fafb;color:#1e293b}a{cursor:pointer}.main-nav-link{font-weight:500;color:#d1d5db;padding:.5rem 1rem;border-radius:.5rem;transition:all .2s}.main-nav-link:hover{color:#fff;background:rgba(51,65,85,.5);transform:translateY(-1px)}

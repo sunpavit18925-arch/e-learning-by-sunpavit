@@ -53,3 +53,13 @@ npm run dev
 | ข้อความของผู้ดูแล | `/admin/messages` | `frontend/src/app/admin/messages/page.tsx` |
 
 URL ของ Next.js ไม่ต้องมีนามสกุลไฟล์ `.tsx` ชื่อ URL เก่าใช้เฉพาะ redirect ใน `next.config.ts` สำหรับ bookmark เดิมเท่านั้น ไม่มีการประมวลผล PHP ในโปรเจกต์ใหม่นี้
+
+## การแบ่งหน้าและการตรวจประสิทธิภาพ
+
+API `/api/courses`, `/api/history` และ `/api/notifications` ส่งผลลัพธ์เป็น `{items,total,page,pageSize,totalPages}` โดยรับ `page` และ `limit` (สูงสุด 50 รายการต่อหน้า) การแจ้งเตือนมี `unread` ของผู้ใช้ทั้งหมดเพิ่มเติม ส่วนคอร์สรับ `search` และ `category` สำหรับค้นหาและกรองจากฐานข้อมูล หน้าแรกขอเพียง 6 คอร์ส และเมนูแจ้งเตือนขอ 5 รายการล่าสุด
+
+เพิ่ม index หลังนำเข้าฐานข้อมูลด้วย `npm run db:indexes` จากโฟลเดอร์นี้ สคริปต์ใช้ `backend/.env` และข้าม index ที่มีคอลัมน์ครอบคลุมอยู่แล้ว สำหรับฐานข้อมูล PHP ใช้ `php scripts/migrate-performance.php --apply` จากโฟลเดอร์โปรเจกต์ PHP ทั้งสองสคริปต์เพิ่มเฉพาะ index และไม่แก้ไขแถวข้อมูล
+
+ตรวจ regression ของ API ด้วย `npm test --prefix backend` และตรวจ PHP ด้วย `php tests/php-performance.php` จากโฟลเดอร์โปรเจกต์ PHP ชุดทดสอบสร้างฐานข้อมูลชั่วคราวจากโครงสร้างตาราง แล้วลบทิ้งเมื่อจบ โดยไม่เขียนข้อมูลทดสอบลงฐานข้อมูลแอป ต้องใช้บัญชีที่สร้างฐานข้อมูลทดสอบได้ สำหรับ PHP กำหนดการเชื่อมต่อทดสอบผ่าน `TEST_DB_HOST`, `TEST_DB_PORT`, `TEST_DB_NAME`, `TEST_DB_USER`, `TEST_DB_PASSWORD` ได้
+
+เมื่อเปิดเว็บอยู่แล้ว ใช้ `node scripts/smoke-browser.cjs` ตรวจการแบ่งหน้า ค้นหา ข้อสอบ และการอัปเดตสถานะบทเรียนด้วย Chrome แบบ headless สคริปต์ใช้โปรไฟล์เบราว์เซอร์แยกและจำลองการบันทึกสถานะบทเรียนเพื่อไม่เปลี่ยนข้อมูลแอป กำหนด Chrome ผ่าน `CHROME_PATH` และ URL ผ่าน `SMOKE_URL` ได้

@@ -3,6 +3,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 require_once 'connection/connection.php';
+require_once __DIR__ . '/includes/quiz-data.php';
 
 if (!isset($_SESSION['username'])) {
     header('Location: login.php');
@@ -42,11 +43,10 @@ try {
                 if (empty($questions)) {
                     $error_message = "แบบทดสอบนี้ยังไม่มีคำถามในระบบ";
                 } else {
-                    // 4. ดึงตัวเลือกของแต่ละคำถาม
+                    // 4. ดึงตัวเลือกทั้งหมดในครั้งเดียว แล้วจัดกลุ่มตามคำถาม
+                    $options_by_question = elearning_quiz_options($pdo, (int)$quiz['quiz_id']);
                     foreach ($questions as $key => $q) {
-                        $stmt_opt = $pdo->prepare("SELECT option_id, option_text FROM question_options WHERE question_id = ? ORDER BY option_id ASC");
-                        $stmt_opt->execute([$q['question_id']]);
-                        $questions[$key]['options'] = $stmt_opt->fetchAll(PDO::FETCH_ASSOC);
+                        $questions[$key]['options'] = $options_by_question[(int)$q['question_id']] ?? [];
                     }
                 }
             }

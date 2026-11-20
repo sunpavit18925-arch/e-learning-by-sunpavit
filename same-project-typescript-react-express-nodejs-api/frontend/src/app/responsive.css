@@ -1,0 +1,34 @@
+/* Shared safeguards for phones, tablets and desktop layouts. */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; width: 100%; min-width: 0; }
+img, video, iframe { max-width: 100%; }
+main { min-width: 0; overflow-wrap: anywhere; }
+/* Let nested flex and grid content shrink instead of widening the page. */
+main :where(.flex, .grid) > * { min-width: 0; }
+input:not([type="checkbox"]):not([type="radio"]), select, textarea { min-width: 0; max-width: 100%; }
+.table-responsive, .table-wrapper, .overflow-x-auto {
+    max-width: 100%; min-width: 0; overflow-x: auto; -webkit-overflow-scrolling: touch;
+}
+/* Preserve readable columns and confine horizontal scrolling to tables. */
+.overflow-x-auto > table { min-width: 40rem; }
+.site-brand { min-width: 0; flex-shrink: 0; white-space: nowrap; }
+.mobile-menu-toggle { min-width: 44px; min-height: 44px; }
+.site-nav .group button > .text-left {
+    max-width: 9rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.site-footer-links { flex-wrap: wrap; gap: 0.75rem 1rem; }
+.site-footer-links > * { margin-left: 0 !important; }
+.dpt-profile :is(.dp-hero-actions, .dp-panel-head), .dpt-edit .ep-actions { flex-wrap: wrap; }
+.dpt-profile :is(.dp-name, .dp-identity, .dp-hero-actions) { min-width: 0; overflow-wrap: anywhere; }
+@media (max-width: 639px) {
+    .site-brand { font-size: clamp(1rem, 5vw, 1.5rem); gap: 0.5rem; }
+    .site-brand > * { margin-left: 0 !important; }
+    /* Avoid automatic zoom while entering fields on iOS. */
+    input:not([type="checkbox"]):not([type="radio"]), select, textarea { font-size: 16px; }
+}
+
+/* Keep expanded navigation reachable on short and landscape screens. */
+#mobile-navigation { max-height: calc(100vh - 5rem); max-height: calc(100dvh - 5rem); overflow-y: auto; overscroll-behavior: contain; }
+#mobile-navigation :is(a, button) { min-height: 44px; display: flex; align-items: center; }
+.site-nav .group:focus-within > div.absolute { display: block; }
+.site-nav .group > div.absolute { max-width: calc(100vw - 2rem); max-height: calc(100dvh - 5rem); overflow-y: auto; overflow-wrap: anywhere; }

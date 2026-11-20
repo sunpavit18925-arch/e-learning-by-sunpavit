@@ -3,6 +3,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 require_once 'connection/connection.php';
+require_once __DIR__ . '/includes/quiz-data.php';
 
 if (!isset($_SESSION['username'])) {
     header('Location: login.php');
@@ -48,24 +49,7 @@ try {
             $my_best = $stmt_my->fetch(PDO::FETCH_ASSOC);
 
             // 3. ดึง Top 10 Leaderboard (คะแนนสูงสุดของแต่ละคน)
-            $stmt_top = $pdo->prepare("
-                SELECT 
-                    qa.user_id, 
-                    u.username, 
-                    u.first_name, 
-                    u.last_name, 
-                    u.image,
-                    MAX(qa.score_obtained) AS top_score,
-                    MIN(qa.time_spent_seconds) AS best_time,
-                    MAX(qa.is_passed) AS has_passed,
-                    MAX(qa.attempt_date) AS last_attempt_date
-                FROM quiz_attempts qa
-                JOIN users u ON qa.user_id = u.user_id
-                WHERE qa.quiz_id = ?
-                GROUP BY qa.user_id, u.username, u.first_name, u.last_name, u.image
-                ORDER BY top_score DESC, best_time ASC, last_attempt_date ASC
-                LIMIT 10
-            ");
+            $stmt_top = $pdo->prepare(elearning_leaderboard_sql());
             $stmt_top->execute([$quiz_id]);
             $leaderboard = $stmt_top->fetchAll(PDO::FETCH_ASSOC);
         }

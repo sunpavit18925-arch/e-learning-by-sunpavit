@@ -51,6 +51,7 @@ if (isset($_SESSION['username'])) {
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <link rel="stylesheet" href="css/responsive.css">
     <style>
         body { 
             font-family: 'Kanit', sans-serif !important; 
@@ -142,16 +143,16 @@ if (isset($_SESSION['username'])) {
     </style>
 </head>
 <body class="bg-gray-50 flex flex-col min-h-screen text-slate-800">
-<nav class="sticky top-0 z-50 bg-slate-900 shadow-md border-b border-gray-800">
+<nav class="site-nav sticky top-0 z-50 bg-slate-900 shadow-md border-b border-gray-800">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex justify-between items-center">
         <!-- Logo -->
-        <a href="index.php" class="flex items-center space-x-3 text-2xl font-bold bg-gradient-to-r from-indigo-400 via-purple-300 to-pink-400 bg-clip-text text-transparent hover:opacity-90 transition">
+        <a href="index.php" class="site-brand flex items-center space-x-3 text-2xl font-bold bg-gradient-to-r from-indigo-400 via-purple-300 to-pink-400 bg-clip-text text-transparent hover:opacity-90 transition">
             <span class="text-2xl">🎓</span>
             <span>E-Learning DPT</span>
         </a>
 
         <!-- Desktop Navigation Links -->
-        <div class="hidden md:flex items-center space-x-1 lg:space-x-2">
+        <div class="hidden xl:flex items-center space-x-1 lg:space-x-2">
             <a href="index.php" class="main-nav-link">หน้าหลัก</a>
             <a href="courses_all.php" class="main-nav-link">คอร์สทั้งหมด</a>
             <a href="about.php" class="main-nav-link">เกี่ยวกับเรา</a>
@@ -164,10 +165,10 @@ if (isset($_SESSION['username'])) {
         </div>
 
         <!-- Right Side: User Controls or Login/Register -->
-        <div class="flex items-center space-x-3 md:space-x-4">
+        <div class="flex items-center space-x-3 xl:space-x-4">
             <?php if ($user): ?>
                 <!-- Notifications Dropdown -->
-                <div class="relative group hidden md:block">
+                <div class="relative group hidden xl:block">
                     <button class="relative p-2.5 text-gray-300 hover:text-white transition focus:outline-none rounded-xl hover:bg-slate-800" aria-label="Notifications">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
@@ -210,7 +211,7 @@ if (isset($_SESSION['username'])) {
                 </div>
 
                 <!-- User Profile Dropdown -->
-                <div class="hidden md:block relative group">
+                <div class="hidden xl:block relative group">
                     <button class="flex items-center text-gray-300 hover:text-white font-medium transition p-1.5 rounded-xl hover:bg-slate-800 focus:outline-none">
                         <div class="w-9 h-9 mr-2 overflow-hidden rounded-full border border-gray-700 flex-shrink-0 group-hover:border-indigo-400 transition shadow-sm bg-slate-700">
                             <?php 
@@ -263,7 +264,7 @@ if (isset($_SESSION['username'])) {
 
             <?php else: ?>
                 <!-- Guest Buttons -->
-                <div class="hidden md:flex items-center space-x-3">
+                <div class="hidden xl:flex items-center space-x-3">
                     <a href="login.php" class="text-gray-300 hover:text-white font-medium px-4 py-2 rounded-xl transition hover:bg-slate-800">
                         เข้าสู่ระบบ
                     </a>
@@ -274,7 +275,7 @@ if (isset($_SESSION['username'])) {
             <?php endif; ?>
 
             <!-- Mobile Notification & Menu Toggle -->
-            <div class="md:hidden flex items-center space-x-2">
+            <div class="xl:hidden flex items-center space-x-2">
                 <?php if ($user): ?>
                     <a href="notifications_all.php" class="relative p-2 text-gray-300 hover:text-white transition">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -286,7 +287,7 @@ if (isset($_SESSION['username'])) {
                     </a>
                 <?php endif; ?>
 
-                <button id="menu-btn" class="p-2 text-gray-300" aria-label="Open mobile menu">
+                <button id="menu-btn" aria-controls="mobile-menu" aria-expanded="false" class="p-2 text-gray-300" aria-label="Open mobile menu">
                     <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                     </svg>
@@ -300,7 +301,7 @@ if (isset($_SESSION['username'])) {
 <!-- Mobile Overlay & Menu -->
 <div id="menu-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] hidden transition-opacity duration-300 opacity-0"></div>
 
-<div id="mobile-menu" class="fixed top-0 left-0 h-full w-[75%] max-w-[320px] bg-slate-900 z-[70] transform -translate-x-full transition-transform duration-300 ease-in-out shadow-2xl border-r border-gray-800 flex flex-col justify-between">
+<div id="mobile-menu" inert aria-hidden="true" class="fixed top-0 left-0 h-full w-[75%] max-w-[320px] bg-slate-900 z-[70] transform -translate-x-full transition-transform duration-300 ease-in-out shadow-2xl border-r border-gray-800 flex flex-col justify-between">
     <div class="p-6">
         <div class="flex justify-between items-center mb-8">
             <div class="text-xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
@@ -376,26 +377,55 @@ if (isset($_SESSION['username'])) {
     const overlay = document.getElementById('menu-overlay');
 
     if (menuBtn && closeBtn && mobileMenu && overlay) {
+        let closeTimer;
+
         function openMenu() {
+            clearTimeout(closeTimer);
+            mobileMenu.inert = false;
+            mobileMenu.setAttribute('aria-hidden', 'false');
+            menuBtn.setAttribute('aria-expanded', 'true');
             overlay.classList.remove('hidden');
-            setTimeout(() => {
-                overlay.classList.add('opacity-100');
-                mobileMenu.classList.remove('-translate-x-full');
-            }, 10);
+            overlay.classList.add('opacity-100');
+            mobileMenu.classList.remove('-translate-x-full');
             document.body.style.overflow = 'hidden'; 
+            closeBtn.focus();
         }
 
-        function closeMenu() {
+        function closeMenu(restoreFocus = true) {
+            clearTimeout(closeTimer);
+            if (restoreFocus && mobileMenu.contains(document.activeElement)) menuBtn.focus();
+            mobileMenu.inert = true;
+            mobileMenu.setAttribute('aria-hidden', 'true');
+            menuBtn.setAttribute('aria-expanded', 'false');
             overlay.classList.remove('opacity-100');
             mobileMenu.classList.add('-translate-x-full');
-            setTimeout(() => {
+            closeTimer = setTimeout(() => {
                 overlay.classList.add('hidden');
             }, 300);
             document.body.style.overflow = ''; 
         }
 
         menuBtn.addEventListener('click', openMenu);
-        closeBtn.addEventListener('click', closeMenu);
-        overlay.addEventListener('click', closeMenu);
+        closeBtn.addEventListener('click', () => closeMenu());
+        overlay.addEventListener('click', () => closeMenu());
+        document.addEventListener('keydown', (event) => {
+            if (mobileMenu.inert) return;
+            if (event.key === 'Escape') closeMenu();
+            if (event.key === 'Tab') {
+                const links = mobileMenu.querySelectorAll('a[href], button');
+                const first = links[0];
+                const last = links[links.length - 1];
+                if (event.shiftKey && document.activeElement === first) {
+                    event.preventDefault();
+                    last.focus();
+                } else if (!event.shiftKey && document.activeElement === last) {
+                    event.preventDefault();
+                    first.focus();
+                }
+            }
+        });
+        window.matchMedia('(min-width: 1280px)').addEventListener('change', (event) => {
+            if (event.matches) closeMenu(false);
+        });
     }
 </script>

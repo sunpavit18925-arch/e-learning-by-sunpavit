@@ -2,6 +2,7 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+require_once __DIR__ . '/includes/pagination.php';
 include 'header.php';
 
 if (!$user) {
@@ -16,8 +17,11 @@ $update_sql = "UPDATE notifications SET is_read = 1 WHERE user_id = :uid AND is_
 $update_stmt = $pdo->prepare($update_sql);
 $update_stmt->execute([':uid' => $user_id]);
 
-// 2. ดึงรายการแจ้งเตือนทั้งหมดมาแสดง
-$sql = "SELECT * FROM notifications WHERE user_id = :uid ORDER BY created_at DESC";
+// 2. นับและดึงเฉพาะหน้าปัจจุบัน
+$count_stmt = $pdo->prepare('SELECT COUNT(*) FROM notifications WHERE user_id = ?');
+$count_stmt->execute([$user_id]);
+$paging = elearning_pagination((int)$count_stmt->fetchColumn());
+$sql = "SELECT * FROM notifications WHERE user_id = :uid ORDER BY created_at DESC, noti_id DESC LIMIT {$paging['size']} OFFSET {$paging['offset']}";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([':uid' => $user_id]);
 $all_notifications = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -39,7 +43,7 @@ $all_notifications = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <p class="text-slate-500 text-sm mt-1">ข้อความแจ้งเตือนกิจกรรมและหลักสูตรใหม่ของคุณ</p>
         </div>
         <span class="text-xs bg-indigo-50 text-indigo-700 font-bold px-3 py-1.5 rounded-full border border-indigo-100">
-            <?= count($all_notifications) ?> รายการ
+            <?= $paging['total'] ?> รายการ
         </span>
     </div>
 
@@ -95,6 +99,7 @@ $all_notifications = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
         <?php endif; ?>
     </div>
+    <?php elearning_render_pagination($paging); ?>
 </main>
 
 <?php include 'footer.php'; ?>

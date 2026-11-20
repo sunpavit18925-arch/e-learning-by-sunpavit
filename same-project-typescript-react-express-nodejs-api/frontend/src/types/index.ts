@@ -9,3 +9,4 @@ export interface Attempt {attempt_id:number;quiz_id:number;title:string;course_t
 export interface CourseDetail extends Course {lessons:Lesson[];quiz:Quiz|null;completed:number[];enrolled:boolean;hasPassed:boolean;canManage:boolean;latestAttempt:Attempt|null}
 export interface Notice {noti_id:number;title:string;message:string;link:string|null;is_read:number;created_at:string}
 export interface Stats {enrolled:number;passed:number;latest:Attempt|null}
+export interface PageResult<T> {items:T[];total:number;page:number;pageSize:number;totalPages:number}
